@@ -1,0 +1,18 @@
+{
+  "url": "https://ifellow.ru/",
+  "urlCareer": "https://ifellow.ru/api/vacancies/",
+  "subtasks": [
+    "О компании",
+    "Руководство компании",
+    "Партнёры компании",
+    "Лицензии и сертификаты",
+    "Благодарственные письма",
+    "Новости"
+  ],
+  "queryParams": {
+    "page" : "0",
+    "filter[city]" : "Москва",
+    "sort[name]" : "asc",
+    "limit" : "0"
+  }
+}

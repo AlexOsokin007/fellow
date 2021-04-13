@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "required": [
+    "MESSAGE",
+    "DATA",
+    "STATUS"
+  ],
+  "properties": {
+    "MESSAGE": {
+      "type": "string"
+    },
+    "STATUS": {
+      "type": "string",
+      "enum": [
+        "OK"
+      ]
+    },
+    "DATA": {
+      "type": "object",
+      "required": [
+        "total",
+        "items"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/properties/DATA/definitions/results"
+          }
+        }
+      },
+      "definitions": {
+        "results": {
+          "type": "object",
+          "required": [
+            "city",
+            "code",
+            "experience",
+            "id",
+            "name"
+          ],
+          "properties": {
+            "city": {
+              "type": "string",
+              "enum": [
+                "Москва"
+              ]
+            },
+            "code": {
+              "type": "string"
+            },
+            "experience": {
+              "type": "string"
+            },
+            "id": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}
