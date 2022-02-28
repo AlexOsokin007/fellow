@@ -1,5 +1,6 @@
 package org.example.common;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.restassured.RestAssured;
@@ -8,6 +9,9 @@ import org.example.utils.JsonHelper;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.LocalFileDetector;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.ITestContext;
@@ -16,8 +20,13 @@ import org.testng.annotations.BeforeMethod;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
 
@@ -71,12 +80,57 @@ public abstract class BaseTest<T> {
     /**
      * Инициализация веб-драйвера
      */
-    protected void initWebDriver() {
+    protected void initWebDriver() throws MalformedURLException, URISyntaxException {
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--lang=ru", "--ignore-certificate-errors", "--ignore-urlfetcher-cert-requests", "--start-maximized");
-        WebDriverManager.chromedriver().setup();
+        options.addArguments("--lang=ru", "--ignore-certificate-errors",
+                "--ignore-urlfetcher-cert-requests", "--start-maximized", "--disable-extensions");
+
+
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        capabilities.setCapability("browserName", "chrome");
+        capabilities.setCapability("browserVersion", "91.0");
+        capabilities.setCapability("moon:options", ImmutableMap.<String, Object>builder().put("enableVNC", true).build());
+
+        options.merge(capabilities);
+
+        RemoteWebDriver remoteWebDriver = new RemoteWebDriver(
+                URI.create("https://<>:<>@dvpr-api-moon-03.moon-ds5-genr03.corp.dev.vtb/wd/hub").toURL(),
+                options
+        );
+
+
+        /*ChromeOptions options = new ChromeOptions();
+        options.addArguments("--lang=ru", "--ignore-certificate-errors",
+                "--ignore-urlfetcher-cert-requests", "--start-maximized", "--disable-extensions");
+
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        capabilities.setCapability("browserName", "chrome");
+        capabilities.setCapability("browserVersion", "92.0");
+        capabilities.setCapability("selenoid:options", ImmutableMap.<String, Object>builder().put("enableVNC", true).build());
+        options.merge(capabilities);
+
+        RemoteWebDriver remoteWebDriver = null;
+
+        remoteWebDriver = new RemoteWebDriver(
+                URI.create("https://vtb4048869:Osokin531732!@dvpr-api-moon-03.moon-ds5-genr03.corp.dev.vtb/wd/hub").toURL(),
+                options
+        );
+        //remoteWebDriver.setFileDetector(new LocalFileDetector());
+        /*try {
+            remoteWebDriver = new RemoteWebDriver(
+                    URI.create("https://vtb4048869:%21@dvpr-api-moon-02.moon-ds5-genr03.corp.dev.vtb").toURL(),
+                    options
+            );
+            remoteWebDriver.setFileDetector(new LocalFileDetector());
+        } catch (Exception e) {
+            LOG.error("Ошибка при инициализации драйвера {}", e.getMessage());
+        }*/
+        webDriver = remoteWebDriver;
+
+
+        /*WebDriverManager.chromedriver().setup();
         webDriver = new ChromeDriver(options);
-        webDriver.manage().window().maximize();
+        webDriver.manage().window().maximize();*/
     }
 
     protected WebDriver getWebDriver() {

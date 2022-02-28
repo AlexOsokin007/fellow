@@ -7,6 +7,9 @@ import org.example.common.Platforms;
 import org.example.utils.TestAllureListener;
 import org.testng.annotations.*;
 
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+
 @Listeners({TestAllureListener.class})
 public class FellowTest extends BaseTest<FellowSettings> {
 
@@ -17,7 +20,7 @@ public class FellowTest extends BaseTest<FellowSettings> {
     }
 
     @BeforeClass(alwaysRun = true)
-    public void init() {
+    public void init() throws MalformedURLException, URISyntaxException {
         initWebDriver();
         fellowStepDef = new FellowStepDef(getWebDriver(), getData().getUrl());
     }
